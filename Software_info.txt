@@ -1,0 +1,36 @@
+[data,denoised,deblurred] = processData(inputPath,outputPath,processingType,optionalParams)
+
+INPUT:
+    inputPath: path to the signle-channel gray-scale multipage TIFF to be used as input
+    outputPath: path where to store the multipage TIFF output
+    processingType [string]: 'all','denoising','denoising','deblurring' processing block to be applied to the input
+    optionalParams: optional parameters to be specified in case we need to use only a specific processing block
+
+OUTPUT:
+data: data read from inputPath
+denoised: denoised data (if denoising is required, otherwise empty)
+deblurred: deblurred data (if deblurring is required, otherwise empty)
+
+*----------------------------------------------------------------------------------------------------------------------------------*
+Processing block:
+1) all processing steps: 'all' [default]
+2) automatic noise parameters estimation: 'noiseEst'
+3) denoising: 'denoising'
+4) deblurring: 'deblurring'
+
+The input for all the processing step is always supposed to be the path (inputPath) to a signle-channel gray-scale multipage TIFF tha needs to be processed. The output will be a multipage TIFF saved with the user-defined outputPath name. 
+
+In case the user need to use only a specific processing block (i.e., case 2), 3), and 4) ), some extra parameters need to be given as input.
+
+CASE 2)
+optionalParams.noiseParamsPath is the path where the user wants the noise parameters to be saved. They will be saved in mat format and can be loaded in Matlab afterwards. The parameters will be saved as affine noise parameters (a and b), and a noise PSD.
+In this case the outputPath will be ignored.
+
+CASE 3)
+optionalParams.noiseParams [1x2] parameters of the affine function that defines the noise variance.
+(OPTIONAL) optionalParams.estimateNoisePSD [bool] enables automatic PSD estimation.
+(OPTIONAL) optionalParams.noisePSD [8x8 single] is the power spectral density (PSD) of noise. If omitted, and if optionalParams.estimateNoisePSD==true, then the noise is assumed to be white, i.e. optionalParams.noisePSD=ones(8);
+
+CASE 4)
+(OPTIONAL) optionalParams.regularizationTemr is the regularization term used for the regularized deconvolution. If not specified the algorithm will try to automatically use a reasonable one. WARNING: this does not ensure good results.
+(OPTIONAL) optionalParams.PSF is the point spread function of the blurring kernel. If omitted the PSF is assumed to be Gaussian isotropic
