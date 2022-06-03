@@ -36,11 +36,11 @@ b = 5e-5;
 noisyData = data + sqrt(max(0,a.*data + b)).*randn(size(data));
 noisyData = max(0,min(1,noisyData));
 
-%% save data as a multipage TIFF 
+%% save data as a multipage TIFF at 16 bit
 addpath(genpath('auxiliaryFunctions'));
 
 demoSequencePath = 'demoSequance.tif';
-writeTIFF(noisyData,demoSequencePath)
+writeTIFF(uint16(noisyData*(2^16-1)),demoSequencePath)
 
 %% clear space and run processing
 clearvars -except demoSequencePath

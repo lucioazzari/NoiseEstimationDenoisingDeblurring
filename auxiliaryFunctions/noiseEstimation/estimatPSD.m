@@ -50,7 +50,7 @@ for iF = 1:size(z,3)
     for iR = 1:step(1):(size(z,1)-bs(1)+1)
         for iC = 1:step(2):(size(z,2)-bs(2)+1)
             ind = ind + 1;
-            w(:,:,ind) = dct2(z(iR:(iR + bs(1) -1), iC:(iC + bs(2) - 1)));
+            w(:,:,ind) = dct2(z(iR:(iR + bs(1) -1), iC:(iC + bs(2) - 1),iF));
         end
     end
 end

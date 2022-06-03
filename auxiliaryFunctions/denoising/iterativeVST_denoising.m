@@ -1,7 +1,19 @@
 function yhat=iterativeVST_denoising(z,p)
 %% Set binning and convex combination params
-lambdaS = [1 0.5 0.5];
-hS = [5 3 1];
+[SNR] = getRoughSNR(z);
+if SNR > 2
+    binSize = 1;
+elseif SNR > 1.5
+    binSize = 3;
+else
+    binSize = 5;
+end
+
+hS = binSize:-2:1
+lambdaS = [1 0.5*ones(1,numel(hS)-1)];
+
+% lambdaS = [1 0.5 0.5];
+% hS = [5 3 1];
 
 %% Iterative denoising
 yhat=z;
@@ -41,6 +53,7 @@ for indLoop=1:numel(lambdaS)
         
         varianceScalingFactor = getScalingVarianceFactor(1);
         PSD = ones(8);
+%         [PSD] = estimatPSD(fz);
         D = RF3D(fz, 1.0*sqrt(varianceScalingFactor), 0, PSD, zeros(8));
         
         % Scale back to the initial VST range

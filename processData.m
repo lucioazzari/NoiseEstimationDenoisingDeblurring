@@ -15,7 +15,6 @@ elseif strcmp(processingType,'denoising')
 elseif strcmp(processingType,'deblurring')
     denoised = [];
 else
-    warning('No recognized processing type. ASSUMED [all]');
     processingType = 'all';
 end
 
