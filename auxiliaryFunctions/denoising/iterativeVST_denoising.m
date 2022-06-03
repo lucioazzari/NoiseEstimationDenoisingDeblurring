@@ -40,6 +40,7 @@ for indLoop=1:numel(lambdaS)
         fz = getScaledData(fz);
         
         varianceScalingFactor = getScalingVarianceFactor(1);
+        PSD = ones(8);
         D = RF3D(fz, 1.0*sqrt(varianceScalingFactor), 0, PSD, zeros(8));
         
         % Scale back to the initial VST range

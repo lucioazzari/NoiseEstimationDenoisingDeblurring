@@ -32,5 +32,5 @@ optionalParams.noiseParams [1x2] parameters of the affine function that defines 
 (OPTIONAL) optionalParams.noisePSD [8x8 single] is the power spectral density (PSD) of noise. If omitted, and if optionalParams.estimateNoisePSD==true, then the noise is assumed to be white, i.e. optionalParams.noisePSD=ones(8);
 
 CASE 4)
-(OPTIONAL) optionalParams.regularizationTemr is the regularization term used for the regularized deconvolution. If not specified the algorithm will try to automatically use a reasonable one. WARNING: this does not ensure good results.
+(OPTIONAL) optionalParams.regularizationTerm is the regularization term used for the regularized deconvolution. If not specified the algorithm will try to automatically use a reasonable one. WARNING: this does not ensure good results.
 (OPTIONAL) optionalParams.PSF is the point spread function of the blurring kernel. If omitted the PSF is assumed to be Gaussian isotropic

@@ -1,4 +1,8 @@
 function [data,denoised,deblurred] = processData(inputPath,outputPath,processingType,optionalParams)
+%% check depndencies and add subfolder paths for auxiliary functions
+checkDependencies();
+addpath(genpath('auxiliaryFunctions'));
+
 %% load data
 data = double(tiffreadVolume(inputPath));
 
@@ -36,6 +40,7 @@ PSF = fspecial('gaussian', 25, sqrt(3.5));
 regParams = 1e-4;
 if strcmp(processingType,'all')
     deblurred = applyDeblurring(denoised,PSF,regParams);
+    writeTIFF(deblurred,outputPath)
 elseif strcmp(processingType,'denoising')
     deblurred = applyDeblurring(data,PSF,regParams);
     writeTIFF(deblurred,outputPath)

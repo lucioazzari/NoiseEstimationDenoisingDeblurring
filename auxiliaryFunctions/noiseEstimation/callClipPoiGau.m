@@ -14,7 +14,7 @@ level_set_density_factor=1;      %   density of the slices in for the expectatio
 integral_resolution_factor=1;    %   integral resolution (sampling) for the finite sums used for evaluatiing the ML-integral   [default 1]
 speed_factor=1;                  %   factor controlling simultaneously density and integral resolution factors  [default 1] (use large number, e.g. 1000, for very fast algorithm)
 
-text_verbosity=1;                %  how much info to print to screen 0: none, 1: little, 2: a lot
+text_verbosity=0;                %  how much info to print to screen 0: none, 1: little, 2: a lot
 figure_verbosity=0;              %  show/keep figures?        [default 3]
 
 lambda=1;                        %  [0,1]:  models the data distribution as a mixture of Gaussian and Cauchy PDFs (each with scale parameter sigma), with mixture parameters lambda and (1-lambda): p(x) = (1-lambda)*N(x,y,sigma^2)+lambda*Cauchy(x,y,sigma)     [default 1]
