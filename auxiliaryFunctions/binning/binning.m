@@ -14,7 +14,7 @@ function out = binning(inp, mode, count)
     end
 
     if strcmp(mode, 'displacement') || strcmp(mode, 'all')
-        out = zeros([size(inp, 1), sz(2), sz(3)], 'single');
+        out = zeros([size(inp, 1), sz(2), sz(3)]);
         for ix = 1:size(out, 1)
             out(ix, :, :) = bin_B_h(squeeze(inp(ix, :, :)), count);
         end

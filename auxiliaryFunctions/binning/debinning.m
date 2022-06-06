@@ -6,7 +6,7 @@ function out = debinning(inp, mode, count, sz)
 %   :param sz: output size (=original size before binning)
 
     if strcmp(mode, 'displacement') || strcmp(mode, 'all')
-        out = zeros([size(inp, 1), sz(2), sz(3)], 'single');
+        out = zeros([size(inp, 1), sz(2), sz(3)]);
         for ix = 1:size(out, 1)
            out(ix, :, :) = debin_Binv_h(squeeze(inp(ix, :, :)),sz(2:end), count, 20);
         end

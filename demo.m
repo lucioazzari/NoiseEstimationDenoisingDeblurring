@@ -2,17 +2,20 @@
 clear all
 clc
 
+%% add processing functions to Matlab's path
+addpath(genpath('auxiliaryFunctions'));
+
 %% download and unzip necessary external files
 url = 'https://webpages.tuni.fi/foi/GCF-BM3D/RF3D_v1p1p1.zip';
-RF3DFld = 'RF3D';
+RF3DFld = fullfile('downloadedPackages','RF3D');
 unzip(url, RF3DFld);
 
 url = 'https://webpages.tuni.fi/foi/ClipPoisGaus_stdEst2D_v232.zip';
-ClipPoisGausFld = 'ClipPoisGaus';
+ClipPoisGausFld = fullfile('downloadedPackages','ClipPoisGaus');
 unzip(url, ClipPoisGausFld);
 
 url = 'https://webpages.tuni.fi/foi/invansc/invansc_v3.zip';
-invanscFld = 'invansc';
+invanscFld = fullfile('downloadedPackages','invansc');
 unzip(url, invanscFld);
 
 %% add extracted files to matlab path and check dependencies
@@ -35,14 +38,12 @@ end
 clear vidframes sz
 
 %% add noise
-a = 1000*5e-4;
-b = 1000*5e-5;
+a = 100*5e-4;
+b = 100*5e-5;
 noisyData = data + sqrt(max(0,a.*data + b)).*randn(size(data));
 noisyData = max(0,min(1,noisyData));
 
 %% save data as a multipage TIFF at 16 bit
-addpath(genpath('auxiliaryFunctions'));
-
 demoSequencePath = 'demoSequance.tif';
 writeTIFF(uint16(noisyData*(2^16-1)),demoSequencePath)
 

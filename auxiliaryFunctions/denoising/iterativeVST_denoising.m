@@ -34,7 +34,7 @@ for indLoop=1:numel(lambdaS)
         %% Apply forward VST
         a = p(1)*lambda^2;
         b = p(2)*scale_b*lambda^2;
-        fz = apply_GenAncomb(z_B,[a b],true);
+        fz = apply_GenAncombe(z_B,[a b],true);
         
         %% AWGN DENOISING
         % Scale the image (BM3D processes inputs in [0,1] range)
@@ -51,7 +51,7 @@ for indLoop=1:numel(lambdaS)
         D = getInverseScaledData(D);
         
         %% Apply the inverse VST for convex combination z_i of Poisson z and estimate yhat
-        yhat = apply_GenAncomb(D,[a b],false);
+        yhat = apply_GenAncombe(D,[a b],false);
         
         %% Debinning
         if size(z_i,3)>1
