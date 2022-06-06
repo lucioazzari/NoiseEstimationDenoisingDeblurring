@@ -37,9 +37,9 @@ end
 
 %% noise estimation
 if strcmp(processingType,'all')
-    [noiseParams,~] = estimateAllNoiseParams(data,'estNoiseParams',maxBinSize);
+    [noiseParams,~] = estimateAllNoiseParams(data,'estNoiseParams',1);
 elseif strcmp(processingType,'noiseEst')
-    [noiseParams,PSD] = estimateAllNoiseParams(data,'estAll',maxBinSize);
+    [noiseParams,PSD] = estimateAllNoiseParams(data,'estAll',1);
     save(optionalParams.noiseParamsPath,'noiseParams','PSD');
 end
 

@@ -35,8 +35,8 @@ end
 clear vidframes sz
 
 %% add noise
-a = 100*5e-4;
-b = 100*5e-5;
+a = 1000*5e-4;
+b = 1000*5e-5;
 noisyData = data + sqrt(max(0,a.*data + b)).*randn(size(data));
 noisyData = max(0,min(1,noisyData));
 

@@ -8,7 +8,7 @@ variance_power=1;                %  power of the variance [default 1, i.e. affin
 
 median_est=1;                    %  0: sample standard deviation;  1: MAD   (1)
 LS_median_size=1;                %  size of median filter for outlier removal in LS fitting (enhances robustness for initialization of ML) 0: disabled  [default 1 = auto]
-tau_threshold_initial=2;         %  (initial) scaling factor for the tau threshold used to define the set of smoothness   [default 1]
+tau_threshold_initial=5;         %  (initial) scaling factor for the tau threshold used to define the set of smoothness   [default 1]
 
 level_set_density_factor=1;      %   density of the slices in for the expectations   [default 1 ( = 600 slices)]   (if image is really small it should be reduced, say, to 0.5 or less)
 integral_resolution_factor=1;    %   integral resolution (sampling) for the finite sums used for evaluatiing the ML-integral   [default 1]
