@@ -7,5 +7,5 @@ end
 %% estimate PSD
 PSD = [];
 if strcmp(estimateType,'estAll') || strcmp(estimateType,'estPSD')
-    [PSD] = estimatPSD(data);
+    [PSD] = estimatePSD(data);
 end
