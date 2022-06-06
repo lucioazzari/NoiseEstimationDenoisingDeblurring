@@ -1,3 +1,7 @@
+%% clear workspace
+clear all
+clc
+
 %% download and unzip necessary external files
 url = 'https://webpages.tuni.fi/foi/GCF-BM3D/RF3D_v1p1p1.zip';
 RF3DFld = 'RF3D';
@@ -31,8 +35,8 @@ end
 clear vidframes sz
 
 %% add noise
-a = 5e-4;
-b = 5e-5;
+a = 100*5e-4;
+b = 100*5e-5;
 noisyData = data + sqrt(max(0,a.*data + b)).*randn(size(data));
 noisyData = max(0,min(1,noisyData));
 

@@ -1,15 +1,6 @@
-function yhat=iterativeVST_denoising(z,p)
+function yhat=iterativeVST_denoising(z,p,binSize)
 %% Set binning and convex combination params
-[SNR] = getRoughSNR(z);
-if SNR > 2
-    binSize = 1;
-elseif SNR > 1.5
-    binSize = 3;
-else
-    binSize = 5;
-end
-
-hS = binSize:-2:1
+hS = binSize:-2:1;
 lambdaS = [1 0.5*ones(1,numel(hS)-1)];
 
 % lambdaS = [1 0.5 0.5];

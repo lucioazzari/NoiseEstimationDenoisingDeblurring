@@ -12,6 +12,16 @@ denoised: denoised data (if denoising is required, otherwise empty)
 deblurred: deblurred data (if deblurring is required, otherwise empty)
 
 *----------------------------------------------------------------------------------------------------------------------------------*
+
+optionalParams.maxBinSize: is the bin size (positive scalar integer) corresponding to the smalles scale (in multiscale processing). 
+optionalParams.maxBinSize must be odd; if not, the algorithm automatically converts it to the smalles odd value closest to the input and alrger or equal than 1!
+For noise with 'normal' strength (e.g., noise variance smaller than half the data's dynamic range) optionalParams.maxBinSize=1 needs to be used. 
+For 'stronger' noise (e.g., noise variance between half and the data's dynamic range) optionalParams.maxBinSize=5 is recommended. 
+For 'very strong' noise (e.g., noise variance larger than the data's dynamic range) optionalParams.maxBinSize=5 is recommended.
+If optionalParams.maxBinSize is not specified, the algorithm will estimate it internally.
+
+*----------------------------------------------------------------------------------------------------------------------------------*
+
 Processing block:
 1) all processing steps: 'all' [default]
 2) automatic noise parameters estimation: 'noiseEst'
