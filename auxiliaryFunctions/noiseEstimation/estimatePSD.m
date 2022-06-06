@@ -1,4 +1,4 @@
-function [PSD] = estimatPSD(data)
+function [PSD] = estimatePSD(data)
 
 useMAD = true;
 bs = [8,8];
@@ -33,6 +33,9 @@ else
     end
     PSD = median(PSD,3);
 end
+
+PSD(1) = max([PSD(1,2) PSD(2,1) PSD(2,2)]);
+
 end
 
 function [PSD] = estPSD_DCT(z,bs,useMAD)
