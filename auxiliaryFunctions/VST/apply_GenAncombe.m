@@ -1,4 +1,4 @@
-function [out] = apply_GenAncomb(in,p,forward)
+function [out] = apply_GenAncombe(in,p,forward)
 
 alpha = p(1);
 sigma = sqrt(max(p(2), 0));
