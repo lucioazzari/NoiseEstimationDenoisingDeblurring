@@ -51,4 +51,4 @@ writeTIFF(uint16(noisyData*(2^16-1)),demoSequencePath)
 clearvars -except demoSequencePath
 processingType = 'all';
 outputPath = 'processedSequence.tif';
-[data,denoised,deblurred] = processData(demoSequencePath,outputPath,processingType);
+[noisy,denoised,deblurred] = processData(demoSequencePath,outputPath,processingType);
