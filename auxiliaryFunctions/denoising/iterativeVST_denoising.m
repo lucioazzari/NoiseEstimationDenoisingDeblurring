@@ -1,4 +1,4 @@
-function yhat=iterativeVST_denoising(z,p,binSize)
+function yhat=iterativeVST_denoising(z,p,binSize,filterStrenght,enableEstimationPSD)
 %% Set binning and convex combination params
 hS = binSize:-2:1;
 lambdaS = [1 0.5*ones(1,numel(hS)-1)];
@@ -39,13 +39,21 @@ for indLoop=1:numel(lambdaS)
         %% AWGN DENOISING
         % Scale the image (BM3D processes inputs in [0,1] range)
         desiredRange = [0.05 0.95];
-        [getScaledData,getInverseScaledData,getScalingVarianceFactor] = getScalingTransforms(fz,desiredRange);
+        [getScaledData,getInverseScaledData,~] = getScalingTransforms(fz,desiredRange);
         fz = getScaledData(fz);
         
-        varianceScalingFactor = getScalingVarianceFactor(1);
-        PSD = ones(8);
-%         [PSD] = estimatPSD(fz);
-        D = RF3D(fz, 1.0*sqrt(varianceScalingFactor), 0, PSD, zeros(8));
+        if enableEstimationPSD
+            [PSD] = estimatePSD(fz);
+            PSD = PSD / mean(PSD(:));
+        else
+            PSD = ones(8);
+        end
+        
+%         load('PSD_hori.mat','PSD');
+        
+        estSTD = estimateSTD(fz);
+        
+        D = RF3D(fz, filterStrenght*estSTD, 0, PSD, zeros(8));
         
         % Scale back to the initial VST range
         D = getInverseScaledData(D);
