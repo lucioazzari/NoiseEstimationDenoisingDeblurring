@@ -1,46 +1,51 @@
-[data,denoised,deblurred] = processData(inputPath,outputPath,processingType,optionalParams)
+[noisy,denoised,deblurred] = processData(inputPath,outputPath,processingType,optionalParams)
 
 INPUT:
-    inputPath: path to the signle-channel gray-scale multipage TIFF to be used as input
-    outputPath: path where to store the multipage TIFF output
-    processingType [string]: 'all','denoising','denoising','deblurring' processing block to be applied to the input
+    inputPath: path to the signle-channel gray-scale multipage TIFF to be processed
+    outputPath: path where to store the signle-channel gray-scale multipage TIFF output
+    processingType [string]: processing block to be applied to the input ('noiseEst','denoising','all')
     optionalParams: optional parameters to be specified in case we need to use only a specific processing block
 
 OUTPUT:
-data: data read from inputPath
-denoised: denoised data (if denoising is required, otherwise empty)
-deblurred: deblurred data (if deblurring is required, otherwise empty)
+    noisy: noisy data read from inputPath
+    denoised: denoised data (if denoising is executed, otherwise empty)
+    deblurred: deblurred data (if deblurring is executed, otherwise empty)
 
 *----------------------------------------------------------------------------------------------------------------------------------*
 
-optionalParams.maxBinSize: is the bin size (positive scalar integer) corresponding to the smalles scale (in multiscale processing). 
-optionalParams.maxBinSize must be odd; if not, the algorithm automatically converts it to the smalles odd value closest to the input and alrger or equal than 1!
-For noise with 'normal' strength (e.g., noise variance smaller than half the data's dynamic range) optionalParams.maxBinSize=1 needs to be used. 
-For 'stronger' noise (e.g., noise variance between half and the data's dynamic range) optionalParams.maxBinSize=5 is recommended. 
-For 'very strong' noise (e.g., noise variance larger than the data's dynamic range) optionalParams.maxBinSize=5 is recommended.
+NOISE ESTIMATION PARAMETERS
+
+optionalParams.noiseParamsPath is the path where the user wants the noise parameters to be saved. They will be saved in mat format and can be loaded in Matlab afterwards. The parameters will be saved as affine noise parameters (a and b), and a noise PSD.
+NOTE: If processingType is set to 'noiseEst' and optionalParams.noiseParamsPath is not specified the noise parameters are saved in working folder as 'noiseParameters.mat'
+
+*----------------------------------------------------------------------------------------------------------------------------------*
+
+DENOISING PARAMETERS
+
+optionalParams.filterStrenght: adjusts the filter strenght. 
+optionalParams.filterStrenght is a positive scalar double that will be used to adjust the filter strenght. It is indepepndent from optionalParams.maxBinSize (see below), and it is applied to each denoising scale.
+0 corresponds to no denoising, 1 corresponds to standard denoising, >1 corresponds to strong denoising
+
+optionalParams.maxBinSize: is the bin size (positive scalar integer) corresponding to the smallest scale (in multiscale processing) used for denoising. 
+optionalParams.maxBinSize should be set to 1 most of the time. In case the noise is very strong, and the underlying noise-free signal is barely visible, then we recommend optionalParams.maxBinSize > 1.
+NOTE: optionalParams.maxBinSize must be odd and smaller or equal than 5; if not, the algorithm automatically converts it to the smallest odd value closest to the input and larger or equal than 1.
+For 'ordinary' noise strength (e.g., noise variance smaller than half of the data's dynamic range) optionalParams.maxBinSize=1 is recommended. 
+For 'strong' noise strength (e.g., noise variance between half and the data's dynamic range) optionalParams.maxBinSize=3 is recommended. 
+For 'very strong' noise strength (e.g., noise variance larger than the data's dynamic range) optionalParams.maxBinSize=5 is recommended.
 If optionalParams.maxBinSize is not specified, the algorithm will estimate it internally.
 
 *----------------------------------------------------------------------------------------------------------------------------------*
 
+DEBLURRING PARAMETERS
+
+optionalParams.deblurringStrenght: adjusts the deblurring PSF width. Only used if optionalParams.PSF is not specified.
+optionalParams.deblurringStrenght is a strictly positive scalar double that will be used to adjust the width of the default PSF used for deblurring.
+
+optionalParams.PSF: is the PSF to be used for deblurring. If given as input it overwrites the default isotropic PSF and it disables any optionalParams.deblurringStrenght given as input.
+
+*----------------------------------------------------------------------------------------------------------------------------------*
+
 Processing block:
-1) all processing steps: 'all' [default]
+1) noise estiation + denoising + deblurring: 'all' [default]
 2) automatic noise parameters estimation: 'noiseEst'
-3) denoising: 'denoising'
-4) deblurring: 'deblurring'
-
-The input for all the processing step is always supposed to be the path (inputPath) to a signle-channel gray-scale multipage TIFF tha needs to be processed. The output will be a multipage TIFF saved with the user-defined outputPath name. 
-
-In case the user need to use only a specific processing block (i.e., case 2), 3), and 4) ), some extra parameters need to be given as input.
-
-CASE 2)
-optionalParams.noiseParamsPath is the path where the user wants the noise parameters to be saved. They will be saved in mat format and can be loaded in Matlab afterwards. The parameters will be saved as affine noise parameters (a and b), and a noise PSD.
-In this case the outputPath will be ignored.
-
-CASE 3)
-optionalParams.noiseParams [1x2] parameters of the affine function that defines the noise variance.
-(OPTIONAL) optionalParams.estimateNoisePSD [bool] enables automatic PSD estimation.
-(OPTIONAL) optionalParams.noisePSD [8x8 single] is the power spectral density (PSD) of noise. If omitted, and if optionalParams.estimateNoisePSD==true, then the noise is assumed to be white, i.e. optionalParams.noisePSD=ones(8);
-
-CASE 4)
-(OPTIONAL) optionalParams.regularizationTerm is the regularization term used for the regularized deconvolution. If not specified the algorithm will try to automatically use a reasonable one. WARNING: this does not ensure good results.
-(OPTIONAL) optionalParams.PSF is the point spread function of the blurring kernel. If omitted the PSF is assumed to be Gaussian isotropic
+3) noise estiation + denoising: 'denoising'
