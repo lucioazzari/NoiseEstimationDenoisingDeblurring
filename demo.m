@@ -52,3 +52,12 @@ clearvars -except demoSequencePath
 processingType = 'all';
 outputPath = 'processedSequence.tif';
 [noisy,denoised,deblurred] = processData(demoSequencePath,outputPath,processingType);
+
+%% equivalent processing with custom parameters
+optionalParams.maxBinSize = 1;
+optionalParams.filterStrenght = 1;
+optionalParams.enableEstimationPSD = false;
+optionalParams.deblurringStrenght = 1;
+
+outputPath = 'processedSequenceOpt.tif';
+[noisyOpt,denoisedOpt,deblurredOpt] = processData(demoSequencePath,outputPath,processingType,optionalParams);
