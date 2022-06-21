@@ -1,10 +1,9 @@
-function [data,denoised,deblurred] = processData(inputPath,outputPath,processingType,optionalParams)
+function [noisy,denoised,deblurred] = processData(inputPath,outputPath,processingType,optionalParams)
 %% check depndencies and add subfolder paths for auxiliary functions
 checkDependencies();
-addpath(genpath('auxiliaryFunctions'));
 
 %% load data
-data = double(tiffreadVolume(inputPath));
+noisy = double(tiffreadVolume(inputPath));
 
 %% create ouput data
 if strcmp(processingType,'noiseEst')
@@ -18,50 +17,50 @@ else
     processingType = 'all';
 end
 
-%% if the user does not specify the max binning size we automatically estimate it
-if exist('optionalParams','var') && isfield(optionalParams,'maxBinSize')
-    maxBinSize = optionalParams.maxBinSize;
-    maxBinSize = max(1,maxBinSize);% maxBinSize has to be minimum 1
-    if mod(maxBinSize,2)==0
-        maxBinSize = maxBinSize-1;
-    end
-    dip('*----------------*')
-    fprintf('User input maxBinSize=%d\n', maxBinSize);
-    dip('*----------------*')
+%% set up default processing parameters and check optional inputs
+if ~exist('optionalParams','var')
+    optionalParams.useDefaultParams = true;
 else
-    [maxBinSize,SNR] = getMaxBinSize(data);
-    disp('*----------------*')
-    fprintf('The rough SNR estimate is: %f. maxBinSize=%d has been automatically estimated\n', SNR, maxBinSize);
-    disp('*----------------*')
+    optionalParams.useDefaultParams = false;
 end
 
+[allProcessingParameters] = getProcessingParameters(processingType,...
+                                                    noisy,...
+                                                    optionalParams);
+
 %% noise estimation
-if strcmp(processingType,'all')
-    [noiseParams,~] = estimateAllNoiseParams(data,'estNoiseParams',1);
-elseif strcmp(processingType,'noiseEst')
-    [noiseParams,PSD] = estimateAllNoiseParams(data,'estAll',1);
-    save(optionalParams.noiseParamsPath,'noiseParams','PSD');
+if ~allProcessingParameters.enableBlocks.estimatePSD
+    [noiseParams,~] = estimateAllNoiseParams(noisy,...
+                                             'estNoiseParams',...
+                                             1);
+else
+    [noiseParams,PSD] = estimateAllNoiseParams(noisy,...
+                                               'estAll',...
+                                               1);
+    if exist('optionalParams','var') && isfield(optionalParams,'maxBinSize')
+        save(optionalParams.noiseParamsPath,'noiseParams','PSD');
+    else
+        save('noiseParameters.mat','noiseParams','PSD');
+    end
 end
 
 %% denoising
-if strcmp(processingType,'all')
-    denoised = chunckRF3D(data,noiseParams,maxBinSize);
-elseif strcmp(processingType,'denoising')
-    denoised = chunckRF3D(data,optionalParams.noiseParams,maxBinSize);
-    writeTIFF(denoised,outputPath)
+if allProcessingParameters.enableBlocks.doDenoising
+    denoised = chunckRF3D(noisy,noiseParams,...
+                          allProcessingParameters.maxBinSize,...
+                          allProcessingParameters.filterStrenght,...
+                          allProcessingParameters.enableEstimationPSD);
+    output = denoised;
 end
 
 %% deblurring
-psfSupport = 25;
-psfStd = sqrt(min(13,max(0.3,-0.4984 + 0.0039*min(size(denoised(:,:,1))))));
-PSF = fspecial('gaussian', psfSupport, psfStd);
-regParams = 1e-4*sqrt(max(denoised(:))/300);
-if strcmp(processingType,'all')
-    deblurred = applyDeblurring(denoised,PSF,regParams);
-    writeTIFF(deblurred,outputPath)
-elseif strcmp(processingType,'denoising')
-    deblurred = applyDeblurring(data,PSF,regParams);
-    writeTIFF(deblurred,outputPath)
+if allProcessingParameters.enableBlocks.doDeblurring
+    regParams = 1e-4*sqrt(max(noisy(:))/300);
+    deblurred = applyDeblurring(denoised,...
+                                allProcessingParameters.PSF,...
+                                regParams);
+    output = deblurred;
 end
-   
-    
+
+%% write output
+writeTIFF(output,outputPath)
