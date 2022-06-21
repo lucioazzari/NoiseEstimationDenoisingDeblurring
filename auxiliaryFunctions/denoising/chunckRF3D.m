@@ -1,4 +1,4 @@
-function D = chunckRF3D(data,noiseParams,maxBinSize)
+function D = chunckRF3D(data,noiseParams,maxBinSize,filterStrenght,enableEstimationPSD)
 if all(size(data(:,:,1)) > 512)
     % divide a sequence in 9 spatially overlapping chuncks that will the be
     % reconstracuted after individual processing
@@ -26,7 +26,7 @@ if all(size(data(:,:,1)) > 512)
         eH = min(seqSize(2),round(sH + lenChunk(2) - 1 + lenChunk(2)*overlap/2));
         
         dataWorker = data(sV:eV,sH:eH,:);
-        D = iterativeVST_denoising(dataWorker,noiseParams,maxBinSize);
+        D = iterativeVST_denoising(dataWorker,noiseParams,maxBinSize,filterStrenght,enableEstimationPSD);
         
         chuncksCoo{indChunk} = [sV,eV;sH,eH];
         chuncks{indChunk} = D;
@@ -54,5 +54,5 @@ if all(size(data(:,:,1)) > 512)
     
     D = D./weights;
 else
-    D = iterativeVST_denoising(data,noiseParams,maxBinSize);
+    D = iterativeVST_denoising(data,noiseParams,maxBinSize,filterStrenght,enableEstimationPSD);
 end
