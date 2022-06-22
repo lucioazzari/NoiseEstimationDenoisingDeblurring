@@ -1,4 +1,4 @@
-# MATLAB software for Noise Estimation, Denoising, and Deblurring (NEDD)
+# Noise Estimation, Denoising, and Deblurring (NEDD)
 
 This software is a collection of algorithms for noise estimation, denoising, and deblurring developed by the Signal and Image Restoration group of the Tampere Univesrsity.
 
