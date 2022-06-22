@@ -7,5 +7,9 @@ end
 %% estimate PSD
 PSD = [];
 if strcmp(estimateType,'estAll') || strcmp(estimateType,'estPSD')
-    [PSD] = estimatePSD(data);
+    a = noiseParams(1);
+    b = noiseParams(2);
+    fz = apply_GenAncombe(z_B,[a b],true);
+    [PSD] = estimatePSD(fz);
+    PSD = PSD / mean(PSD(:));
 end
