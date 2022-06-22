@@ -53,7 +53,7 @@ for indLoop=1:numel(lambdaS)
         
         estSTD = estimateSTD(fz);
         
-        D = RF3D(fz, filterStrenght*estSTD, 0, PSD, zeros(8));
+        D = RF3D(fz, filterStrenght*estSTD, 0, PSD, zeros(8),'dct');
         
         % Scale back to the initial VST range
         D = getInverseScaledData(D);

@@ -1,5 +1,7 @@
 function [noisy,denoised,deblurred] = processData(inputPath,outputPath,processingType,optionalParams)
 %% check depndencies and add subfolder paths for auxiliary functions
+fprintf('*--------------------------------------------------------------*\n');
+fprintf('Processing starts\n');
 checkDependencies();
 
 %% load data
@@ -27,6 +29,7 @@ end
 [allProcessingParameters] = getProcessingParameters(processingType,...
                                                     noisy,...
                                                     optionalParams);
+fprintf('Processing parameters defined...\n');
 
 %% noise estimation
 if ~allProcessingParameters.enableBlocks.estimatePSD
@@ -43,6 +46,7 @@ else
         save('noiseParameters.mat','noiseParams','PSD');
     end
 end
+fprintf('Noise estimated...\n');
 
 %% denoising
 if allProcessingParameters.enableBlocks.doDenoising
@@ -52,6 +56,7 @@ if allProcessingParameters.enableBlocks.doDenoising
                           allProcessingParameters.enableEstimationPSD);
     output = denoised;
 end
+fprintf('Sequence denoised...\n');
 
 %% deblurring
 if allProcessingParameters.enableBlocks.doDeblurring
@@ -61,6 +66,10 @@ if allProcessingParameters.enableBlocks.doDeblurring
                                 regParams);
     output = deblurred;
 end
+fprintf('Sequence deblurred...\n');
 
 %% write output
 writeTIFF(output,outputPath)
+fprintf('Output saved into %s\n',outputPath);
+fprintf('Process finished correctly\n');
+fprintf('*--------------------------------------------------------------*\n');

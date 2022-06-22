@@ -25,6 +25,12 @@ if optionalParams.useDefaultParams
     allProcessingParameters.enableEstimationPSD = false;
     deblurringStrenght = 1;
     allProcessingParameters.PSF = getPSF(noisy,deblurringStrenght);
+    disp('*----------------*')
+    fprintf('All defalt parameters will be used:\n');
+    fprintf('maxBinSize=%d\n', allProcessingParameters.maxBinSize);
+    fprintf('enableEstimationPSD=%d\n', allProcessingParameters.enableEstimationPSD);
+    fprintf('Default PSF with width=%f\n', deblurringStrenght);
+    disp('*----------------*')
 else
     %% set up max binning size
     if isfield(optionalParams,'maxBinSize')
