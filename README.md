@@ -2,7 +2,7 @@
 
 This software is a collection of algorithms for noise estimation, denoising, and deblurring developed by the Signal and Image Restoration group of the Tampere Univesrsity.
 
-This software has been forst developed to process the data described in the paper E. Mäntylä, T.Montonen, L. Azzari, S. Mattola, M. Hannula, M. Vihinen-Ranta, J. Hyttinen, M. Vippola, A. Foi, S. Nymark, T. O. Ihalainena, _Signal-resolved intensity-enhanced nanoscopy of nuclear lamina_. 
+This software has been first developed to process the data described in the paper E. Mäntylä, T.Montonen, L. Azzari, S. Mattola, M. Hannula, M. Vihinen-Ranta, J. Hyttinen, M. Vippola, A. Foi, S. Nymark, T. O. Ihalainena, _Signal-resolved intensity-enhanced nanoscopy of nuclear lamina_. 
 
 This software automatically denoises and deblurs a noisy stack of images by:
     
