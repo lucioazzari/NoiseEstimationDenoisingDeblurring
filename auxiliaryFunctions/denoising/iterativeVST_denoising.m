@@ -39,7 +39,7 @@ for indLoop=1:numel(lambdaS)
         %% AWGN DENOISING
         % Scale the image (BM3D processes inputs in [0,1] range)
         desiredRange = [0.05 0.95];
-        [getScaledData,getInverseScaledData,~] = getScalingTransforms(fz,desiredRange);
+        [getScaledData,getInverseScaledData,getScalingVarianceFactor] = getScalingTransforms(fz,desiredRange);
         fz = getScaledData(fz);
         
         if enableEstimationPSD
@@ -49,9 +49,9 @@ for indLoop=1:numel(lambdaS)
             PSD = ones(8);
         end
         
-%         load('PSD_hori.mat','PSD');
+%         load('custom_PSD.mat','PSD');
         
-        estSTD = estimateSTD(fz);
+        estSTD = sqrt(getScalingVarianceFactor(1));%estimateSTD(fz);
         
         D = RF3D(fz, filterStrenght*estSTD, 0, PSD, zeros(8),'dct');
         
