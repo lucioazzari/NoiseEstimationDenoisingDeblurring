@@ -110,8 +110,8 @@ if allProcessingParameters.enableBlocks.doDenoising
                           allProcessingParameters.filterStrenght,...
                           allProcessingParameters.enableEstimationPSD);
     output = denoised;
+    fprintf('Sequence denoised...\n');
 end
-fprintf('Sequence denoised...\n');
 
 %% deblurring
 if allProcessingParameters.enableBlocks.doDeblurring
@@ -120,8 +120,8 @@ if allProcessingParameters.enableBlocks.doDeblurring
                                 allProcessingParameters.PSF,...
                                 regParams);
     output = deblurred;
+    fprintf('Sequence deblurred...\n');
 end
-fprintf('Sequence deblurred...\n');
 
 %% write output
 writeTIFF(output,outputPath)
