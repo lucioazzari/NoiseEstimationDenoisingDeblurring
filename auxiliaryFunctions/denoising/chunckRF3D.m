@@ -1,9 +1,14 @@
 function D = chunckRF3D(data,noiseParams,maxBinSize,filterStrenght,enableEstimationPSD)
+
+pctRunOnAll warning off
+
 if all(size(data(:,:,1)) > 512)
     % divide a sequence in 9 spatially overlapping chuncks that will the be
     % reconstracuted after individual processing
     
-    numChunckPerDim = 3;
+    maxChunckSize = 512;
+    numChunckPerDim = ceil(max(size(data(:,:,1)))/maxChunckSize);
+%     numChunckPerDim = 3;
     overlap = 0.25; % 25% of overlap bewteen chunks
     
     seqSize = size(data);
