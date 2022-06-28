@@ -20,7 +20,11 @@ end
 
 %% set up default parameters if optionalParams
 if optionalParams.useDefaultParams
-    allProcessingParameters.maxBinSize = 1;
+    if max(size(noisy(:,:,1)))<512
+        allProcessingParameters.maxBinSize = 1;
+    else
+        allProcessingParameters.maxBinSize = 3;
+    end
     allProcessingParameters.filterStrenght = 1;
     allProcessingParameters.enableEstimationPSD = false;
     deblurringStrenght = 1;
@@ -44,6 +48,9 @@ else
         disp('*----------------*')
     else
         [maxBinSize,SNR] = getMaxBinSize(noisy);
+        if max(size(noisy(:,:,1)))>=512
+            maxBinSize = max(3,maxBinSize);
+        end
         disp('*----------------*')
         fprintf('The rough SNR estimate is: %f. maxBinSize=%d has been automatically estimated\n', SNR, maxBinSize);
         disp('*----------------*')
