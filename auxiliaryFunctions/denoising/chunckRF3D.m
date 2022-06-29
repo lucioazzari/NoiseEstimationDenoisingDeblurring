@@ -63,5 +63,6 @@ if all(size(data(:,:,1)) > 512)
     
     D = D./weights;
 else
+    warning off
     D = iterativeVST_denoising(data,noiseParams,maxBinSize,filterStrenght,enableEstimationPSD);
 end
