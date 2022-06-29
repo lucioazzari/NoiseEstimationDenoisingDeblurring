@@ -81,7 +81,7 @@ else
     else
         enableEstimationPSD = false;
         disp('*----------------*')
-        fprintf('enableEstimationPSD=%f has been set up to its default value\n', filterStrenght);
+        fprintf('enableEstimationPSD=%d has been set up to its default value\n', enableEstimationPSD);
         disp('*----------------*')
     end
     allProcessingParameters.enableEstimationPSD = enableEstimationPSD;

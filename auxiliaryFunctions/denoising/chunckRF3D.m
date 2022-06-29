@@ -1,8 +1,12 @@
 function D = chunckRF3D(data,noiseParams,maxBinSize,filterStrenght,enableEstimationPSD)
 
-pctRunOnAll warning off
-
 if all(size(data(:,:,1)) > 512)
+
+    if isempty(gcp('nocreate'))
+        parpool;
+    end
+    pctRunOnAll warning off
+    
     % divide a sequence in 9 spatially overlapping chuncks that will the be
     % reconstracuted after individual processing
     
