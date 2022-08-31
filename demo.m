@@ -1,5 +1,5 @@
 %% clear workspace
-clear all
+clearvars
 clc
 
 %% add processing functions to Matlab's path
@@ -25,7 +25,7 @@ addpath(invanscFld)
 
 checkDependencies();
 
-%% create synthetic data
+%% load data to be used for the demo
 % read Matlab built-in video
 vidObj = VideoReader('data/testSequence.avi');
 vidframes = read(vidObj);
@@ -44,15 +44,13 @@ writeTIFF(uint16(noisyData*(2^16-1)),demoSequencePath)
 
 %% clear space and run processing
 clearvars -except demoSequencePath
-processingType = 'all';
-outputPath = 'processedSequence.tif';
-[noisy,denoised,deblurred] = processData(demoSequencePath,outputPath,processingType);
 
-%% equivalent processing with custom parameters
-% optionalParams.maxBinSize = 1;
-% optionalParams.filterStrenght = 1;
-% optionalParams.enableEstimationPSD = false;
-% optionalParams.deblurringStrenght = 1;
-% 
-% outputPath = 'processedSequenceOpt.tif';
-% [noisyOpt,denoisedOpt,deblurredOpt] = processData(demoSequencePath,outputPath,processingType,optionalParams);
+noiseModel = 'white';
+outputPath = 'processedSequence.tif';
+
+optionalParams.maxBinSize = 1;
+optionalParams.filterStrenght = 1;
+optionalParams.enableDeblurring = true;
+optionalParams.deblurringStrenght = 1;
+
+[noisy,denoised,deblurred] = processData(demoSequencePath,outputPath,noiseModel,optionalParams);

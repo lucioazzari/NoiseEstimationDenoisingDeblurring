@@ -1,4 +1,4 @@
-function [noisy,denoised,deblurred] = processData(inputPath,outputPath,processingType,optionalParams)
+function [noisy,denoised,deblurred] = processData(inputPath,outputPath,noiseModel,optionalParams)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %  processData  is a collection of algorithms for noise estimation, denoising, and deblurring
@@ -6,7 +6,7 @@ function [noisy,denoised,deblurred] = processData(inputPath,outputPath,processin
 %
 %  FUNCTION INTERFACE:
 %
-%  [noisy,denoised,deblurred] = processData(inputPath,outputPath,processingType,optionalParams)
+%  [noisy,denoised,deblurred] = processData(inputPath,outputPath,noiseModel,optionalParams)
 %
 %  INPUT ARGUMENTS:
 %
@@ -47,7 +47,7 @@ function [noisy,denoised,deblurred] = processData(inputPath,outputPath,processin
 %                                      If optionalParams.maxBinSize is not specified, the algorithm will 
 %                                      estimate it internally.
 %
-%  'optionalParams.enableDeblurring' : enable deblurring.
+%  'optionalParams.enableDeblurring' : boolean variable that enables deblurring. Default value is false.
 %
 % 'optionalParams.deblurringStrenght' : adjusts the deblurring PSF width. Only used if optionalParams.PSF 
 %                                       is not specified. It must be a strictly positive scalar that is 
@@ -87,18 +87,6 @@ checkDependencies();
 %% load data
 noisy = double(tiffreadVolume(inputPath));
 
-%% create ouput data
-if strcmp(processingType,'noiseEst')
-    denoised = [];
-    deblurred = [];
-elseif strcmp(processingType,'denoising')
-    deblurred = [];
-elseif strcmp(processingType,'deblurring')
-    denoised = [];
-else
-    processingType = 'all';
-end
-
 %% set up default processing parameters and check optional inputs
 if ~exist('optionalParams','var')
     optionalParams.useDefaultParams = true;
@@ -106,47 +94,33 @@ else
     optionalParams.useDefaultParams = false;
 end
 
-[allProcessingParameters] = getProcessingParameters(processingType,...
+[allProcessingParameters] = getProcessingParameters(noiseModel,...
                                                     noisy,...
                                                     optionalParams);
 fprintf('Processing parameters defined...\n');
 
 %% noise estimation
-if exist('optionalParams','var') && isfield(optionalParams,'noiseParamsPath')
-    [noiseParams,PSD] = estimateAllNoiseParams(noisy,...
-                                               'estAll',...
-                                               1);
-	save(optionalParams.noiseParamsPath,'noiseParams','PSD');
-elseif ~allProcessingParameters.enableBlocks.estimatePSD
-    [noiseParams,~] = estimateAllNoiseParams(noisy,...
-                                             'estNoiseParams',...
-                                             1);
-else
-    [noiseParams,PSD] = estimateAllNoiseParams(noisy,...
-                                               'estAll',...
-                                               1);
-	save('noiseParameters.mat','noiseParams','PSD');
-end
+[noiseParams,~] = estimateAllNoiseParams(noisy,'estNoiseParams',1);
 fprintf('Noise estimated...\n');
 
 %% denoising
-if allProcessingParameters.enableBlocks.doDenoising
-    denoised = chunckRF3D(noisy,noiseParams,...
-                          allProcessingParameters.maxBinSize,...
-                          allProcessingParameters.filterStrenght,...
-                          allProcessingParameters.enableEstimationPSD);
-    output = denoised;
-    fprintf('Sequence denoised...\n');
-end
+denoised = chunckRF3D(noisy,noiseParams,...
+                      allProcessingParameters.maxBinSize,...
+                      allProcessingParameters.filterStrenght,...
+                      allProcessingParameters.enableEstimationPSD);
+output = denoised;
+fprintf('Sequence denoised...\n');
 
 %% deblurring
-if allProcessingParameters.enableBlocks.doDeblurring
+if allProcessingParameters.enableDeblurring
     regParams = 1e-4*sqrt(max(noisy(:))/300);
     deblurred = applyDeblurring(denoised,...
                                 allProcessingParameters.PSF,...
                                 regParams);
     output = deblurred;
     fprintf('Sequence deblurred...\n');
+else
+    deblurred = [];
 end
 
 %% write output
