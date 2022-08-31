@@ -5,7 +5,7 @@ if strcmp(noiseModel,'white')
     disp('White noise model selected: PSD estimation disabled')
     allProcessingParameters.enableEstimationPSD = false;
 elseif strcmp(noiseModel,'colored')
-    disp('Colored noise model selected: PSD estimation disabled')
+    disp('Colored noise model selected: PSD estimation enabled')
     allProcessingParameters.enableEstimationPSD = true;
 end
 

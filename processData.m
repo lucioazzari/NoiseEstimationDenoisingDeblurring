@@ -100,7 +100,7 @@ end
 fprintf('Processing parameters defined...\n');
 
 %% noise estimation
-[noiseParams,~] = estimateAllNoiseParams(noisy,noiseModel,1);
+noiseParams = estimateAllNoiseParams(noisy,noiseModel,1);
 fprintf('Noise estimated...\n');
 
 %% denoising
