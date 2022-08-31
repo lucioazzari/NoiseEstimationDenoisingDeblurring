@@ -1,15 +1,7 @@
-function [noiseParams,PSD] = estimateAllNoiseParams(data,estimateType,binSize)
-%% estimate noiseParams
-noiseParams = [];
-if strcmp(estimateType,'estAll') || strcmp(estimateType,'estNoiseParams')
-    [noiseParams] = estimateNoiseParams(data,binSize);
-end
-%% estimate PSD
-PSD = [];
-if strcmp(estimateType,'estAll') || strcmp(estimateType,'estPSD')
-    a = noiseParams(1);
-    b = noiseParams(2);
-    fz = apply_GenAncombe(data,[a b],true);
-    [PSD] = estimatePSD(fz);
-    PSD = PSD / mean(PSD(:));
+function noiseParams = estimateAllNoiseParams(data,noiseModel,binSize)
+
+[noiseParams] = estimateNoiseParams(data,binSize);
+if strcmp(noiseModel,'colored')
+    ratio = getNoiseScalingFactor(data,noiseParams);
+    noiseParams = noiseParams*ratio;
 end
