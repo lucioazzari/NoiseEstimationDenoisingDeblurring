@@ -1,3 +1,14 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  This demo is meant to provide examples of how to use the processData
+%  function that performs Noise Estimation, Denoising, and Deblurring
+%  (NEDD).
+%
+%  The user can choose between two experiments. One with white noise (by
+%  setting noiseModel = 'white') and one with colored noise (by setting
+%  noiseModel = 'colored').
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% clear workspace
 clearvars
 clc
@@ -27,25 +38,37 @@ checkDependencies();
 
 %% load data to be used for the demo
 % read Matlab built-in video
-vidObj = VideoReader('data/testSequence.avi');
+vidObj = VideoReader('/home/lucio/Downloads/test_videos/noise_free/gsalesman.avi');
 vidframes = read(vidObj);
 data = im2double(squeeze(vidframes));
 clear vidframes sz
 
-%% add noise
-a = 100*5e-4;
-b = 100*5e-5;
-noisyData = data + sqrt(max(0,a.*data + b)).*randn(size(data));
-noisyData = max(0,min(1,noisyData));
+%% choose noise model
+noiseModel = 'white';
+if strcmp(noiseModel,'white')
+    a = 100*5e-4;
+    b = 100*5e-5;
+    noisyData = data + sqrt(max(0,a.*data + b)).*randn(size(data));
+    noisyData = max(0,min(1,noisyData));
+    noiseModel = 'white';
+elseif strcmp(noiseModel,'colored')
+    a = 10*5e-4;
+    b = 10*5e-5;
+    kernel = fspecial('gaussian',13,1);
+    kernel = kernel/sqrt(sum(kernel(:).^2));
+    noisyData = data + sqrt(max(0,a.*data + b)).*convn(randn(size(data)),kernel,'same');
+    
+else
+    error('Noise model not supported')
+end
 
 %% save data as a multipage TIFF at 16 bit
 demoSequencePath = 'demoSequance.tif';
 writeTIFF(uint16(noisyData*(2^16-1)),demoSequencePath)
 
 %% clear space and run processing
-clearvars -except demoSequencePath
+clearvars -except demoSequencePath noiseModel
 
-noiseModel = 'white';
 outputPath = 'processedSequence.tif';
 
 optionalParams.maxBinSize = 1;
