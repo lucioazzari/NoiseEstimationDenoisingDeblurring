@@ -44,6 +44,7 @@ for indLoop=1:numel(lambdaS)
         
         if enableEstimationPSD
             [PSD] = estimatePSD(fz);
+%             [PSD] = estimatePSD_v2(fz);
             PSD = PSD / mean(PSD(:));
         else
             PSD = ones(8);

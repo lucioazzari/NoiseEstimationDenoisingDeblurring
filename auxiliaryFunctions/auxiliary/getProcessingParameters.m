@@ -1,21 +1,12 @@
-function [allProcessingParameters] = getProcessingParameters(processingType,noisy,optionalParams)
+function [allProcessingParameters] = getProcessingParameters(noiseModel,noisy,optionalParams)
 
-%% enable processing blocks
-if strcmp(processingType,'noiseEst')
-    disp('Processing steps enabled: noise estimation')
-    allProcessingParameters.enableBlocks.estimatePSD = true;
-    allProcessingParameters.enableBlocks.doDenoising = false;
-    allProcessingParameters.enableBlocks.doDeblurring = false;
-elseif strcmp(processingType,'denoising')
-    disp('Processing steps enabled: noise estimation, denoising')
-    allProcessingParameters.enableBlocks.estimatePSD = false;
-    allProcessingParameters.enableBlocks.doDenoising = true;
-    allProcessingParameters.enableBlocks.doDeblurring = false;
-elseif strcmp(processingType,'all')
-    disp('Processing steps enabled: noise estimation, denoising, deblurring')
-    allProcessingParameters.enableBlocks.estimatePSD = false;
-    allProcessingParameters.enableBlocks.doDenoising = true;
-    allProcessingParameters.enableBlocks.doDeblurring = true;
+%% check selected noise model
+if strcmp(noiseModel,'white')
+    disp('White noise model selected: PSD estimation disabled')
+    allProcessingParameters.enableEstimationPSD = false;
+elseif strcmp(noiseModel,'colored')
+    disp('Colored noise model selected: PSD estimation enabled')
+    allProcessingParameters.enableEstimationPSD = true;
 end
 
 %% set up default parameters if optionalParams
@@ -26,14 +17,12 @@ if optionalParams.useDefaultParams
         allProcessingParameters.maxBinSize = 3;
     end
     allProcessingParameters.filterStrenght = 1;
-    allProcessingParameters.enableEstimationPSD = false;
-    deblurringStrenght = 1;
-    allProcessingParameters.PSF = getPSF(noisy,deblurringStrenght);
+    allProcessingParameters.enableDeblurring = false;
     disp('*----------------*')
     fprintf('All defalt parameters will be used:\n');
     fprintf('maxBinSize=%d\n', allProcessingParameters.maxBinSize);
     fprintf('enableEstimationPSD=%d\n', allProcessingParameters.enableEstimationPSD);
-    fprintf('Default PSF with width=%f\n', deblurringStrenght);
+    fprintf('Deblurring disabled\n');
     disp('*----------------*')
 else
     %% set up max binning size
@@ -72,38 +61,33 @@ else
     end
     allProcessingParameters.filterStrenght = filterStrenght;
     
-    %% enable PSD estimation
-    if isfield(optionalParams,'enableEstimationPSD')
-        enableEstimationPSD = optionalParams.enableEstimationPSD;
-        disp('*----------------*')
-        fprintf('User input enableEstimationPSD=%d\n', enableEstimationPSD);
-        disp('*----------------*')
+    %% set up deblurring (disable if not requested)
+    if isfield(optionalParams,'enableDeblurring')
+        allProcessingParameters.enableDeblurring = optionalParams.enableDeblurring;
     else
-        enableEstimationPSD = false;
-        disp('*----------------*')
-        fprintf('enableEstimationPSD=%d has been set up to its default value\n', enableEstimationPSD);
-        disp('*----------------*')
+        allProcessingParameters.enableDeblurring = false;
     end
-    allProcessingParameters.enableEstimationPSD = enableEstimationPSD;
     
-    %% get PSF for deblurring
-    if isfield(optionalParams,'PSF')
-        PSF = optionalParams.PSF;
-        disp('*----------------*')
-        fprintf('User input PSF\n');
-        disp('*----------------*')
-    else
-        if isfield(optionalParams,'deblurringStrenght')
-            deblurringStrenght = optionalParams.deblurringStrenght;
+    %% get PSF for deblurring, if deblurring is enabled
+    if allProcessingParameters.enableDeblurring
+        if isfield(optionalParams,'PSF')
+            PSF = optionalParams.PSF;
+            disp('*----------------*')
+            fprintf('User input PSF\n');
+            disp('*----------------*')
         else
-            deblurringStrenght = 1;
+            if isfield(optionalParams,'deblurringStrenght')
+                deblurringStrenght = optionalParams.deblurringStrenght;
+            else
+                deblurringStrenght = 1;
+            end
+            PSF = getPSF(noisy,deblurringStrenght);
+            disp('*----------------*')
+            fprintf('Default PSF with width=%f\n', deblurringStrenght);
+            disp('*----------------*')
         end
-        PSF = getPSF(noisy,deblurringStrenght);
-        disp('*----------------*')
-        fprintf('Default PSF with width=%f\n', deblurringStrenght);
-        disp('*----------------*')
+        allProcessingParameters.PSF = PSF;
     end
-    allProcessingParameters.PSF = PSF;
 end
 end
 

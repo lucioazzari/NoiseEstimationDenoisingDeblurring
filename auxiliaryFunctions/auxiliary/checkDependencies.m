@@ -1,4 +1,6 @@
-function checkDependencies()
+function allOK = checkDependencies()
+
+allOK = false;
 
 rf3dPackage = exist('RF3D.m','file');
 clipPoisGausPackage = exist('function_ClipPoisGaus_stdEst2D.p','file');
@@ -15,3 +17,5 @@ end
 if ~invansc_v3Package     
     error('The software is missing the invans package. Please download the package from: \n%s\nunzip it and add it to Matlab source path (see demo).','https://webpages.tuni.fi/foi/invansc/invansc_v3.zip')
 end
+
+allOK = true;

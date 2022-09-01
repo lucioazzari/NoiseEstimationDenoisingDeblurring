@@ -22,14 +22,14 @@ else
     
     count = 0;
     allIdx = 1:numSlicesPerChunk:(size(dd,3)-numSlicesPerChunk+1);
-    while count < maxNumChunks
-        ind = randi(numel(allIdx));
-        ii = allIdx(ind);
-        allIdx(ind) = [];
-        count = count + 1;
+    for ii = allIdx
         ddTmp = dd(:,:,ii:ii+numSlicesPerChunk-1);
         [tmp] = estPSD_DCT(ddTmp,bs,useMAD);
         PSD = cat(3,PSD,tmp);
+        count = count+1;
+        if count > maxNumChunks
+            break;
+        end
     end
     PSD = median(PSD,3);
 end
