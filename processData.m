@@ -24,7 +24,16 @@ function [noisy,denoised,deblurred] = processData(inputPath,outputPath,noiseMode
 %
 %    'optionalParams.filterStrenght' : adjusts the filter strenght. It must be a positive scalar that 
 %                                      will be used to adjust the filter strenght. It is applied to 
-%                                      each denoising scale.
+%                                      each denoising scale. Recommended values:
+%                                        - As first denoising attempt, optionalParams.filterStrenght=1 
+%                                          is recommended. This will use the automatically estimated
+%                                          noise parameters.
+%                                        - If the denoising result looks still noisy, use 
+%                                          optionalParams.filterStrenght>1 (e.g., 1.5). In normal 
+%                                          situtations we do not recommend to go over 3.
+%                                        - If the denoising result looks oversmooth, use 
+%                                          optionalParams.filterStrenght<1 (e.g., 0.5). If set to 0, 
+%                                          the algorithm will not perform any denoising.
 %
 %        'optionalParams.maxBinSize' : bin size (positive scalar integer) corresponding to the smallest 
 %                                      scale (in multiscale processing) used for denoising. 
