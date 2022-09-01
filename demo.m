@@ -47,7 +47,7 @@ data = im2double(squeeze(vidframes));
 clear vidframes sz
 
 %% choose noise model
-noiseModel = 'colored';
+noiseModel = 'white';
 
 %set signal-dependent noise function parameters
 a = 10*5e-4;
