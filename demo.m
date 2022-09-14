@@ -19,6 +19,9 @@ addpath(genpath('auxiliaryFunctions'));
 %% if not found, download and unzip necessary external files
 allOK = checkDependencies();
 if ~allOK
+
+    disp('Automatically downloding the necessary packages, unzipping, and adding to the Matlab paths')
+
     url = 'https://webpages.tuni.fi/foi/GCF-BM3D/RF3D_v1p1p1.zip';
     RF3DFld = fullfile('downloadedPackages','RF3D');
     unzip(url, RF3DFld);
