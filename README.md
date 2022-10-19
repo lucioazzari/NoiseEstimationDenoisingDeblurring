@@ -10,7 +10,7 @@ This software is a collection of algorithms for noise estimation, denoising, and
 
 The processing pipeline is fully automated, thus given an input path and an output path the software is capable of returning a _decently_ processed stack. However, we also give the user the possibility of changing few processing parameters that will help to get better results. The optional processing parameters are explained in detail in the help of the **processData.m** function (main function).
 
-This software is wrapper for a collection of other algorithms. Thus, the necessary packages must be downloaded separately. Below we list the required packages and relative links. NOTE: the **demo.m** script automatically downloads and extracts the necessary packages and adds them to the working path of Matlab.
+This software is a wrapper for a collection of other algorithms. Thus, the necessary packages must be downloaded separately. Below we list the required packages and relative links. NOTE: the **demo.m** script automatically downloads and extracts the necessary packages and adds them to the working path of Matlab.
 
 ## List of required external packages:
 
