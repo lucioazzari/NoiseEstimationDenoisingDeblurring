@@ -18,10 +18,13 @@ This software is a wrapper for a collection of other algorithms. Thus, the neces
 * [invansc_v3](https://webpages.tuni.fi/foi/invansc/invansc_v3.zip) for variance stabilization.
 * [rf3d](https://webpages.tuni.fi/foi/GCF-BM3D/RF3D_v1p1p1.zip) for denoising.
 
-The codes are available for non-commercial use only. For details, see LICENSE.
-
-Author of the wrapper: Lucio Azzari [lucio.azzari@tuni.fi](lucio.azzari@tuni.fi)
-
 ## How to efficiently process a sequence:
 
 The RF3D denoising filter is not optimized for large data. This wrapper tries to cope with this by dividing and processing a sequence tile-by-tile. That is, a 3D sequence is divided in spatially overlapping NxMxF tiles, where F is the total number of frames. As the amount of memory required for the processing increases linearly with F, if F is too large then Matlab will run out of memory fast enough. To avoid this problem, we recommend to temporally divide a sequence in the desired amount of frames, and to process each chunk of sequence independently. As an example, a video of size 1080x1080x350 is enough to eat up to 120GB of RAM. Thus, for a working laptop with 16GB/32GB we do not recommend to try to process more than 50 frames per time (at 1080x1080 resolution).
+
+
+---
+
+The codes are available for non-commercial use only. For details, see LICENSE.
+
+Author of the wrapper: Lucio Azzari [lucio.azzari@tuni.fi](lucio.azzari@tuni.fi)
