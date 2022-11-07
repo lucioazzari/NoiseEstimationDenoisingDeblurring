@@ -67,9 +67,9 @@ function [noisy,denoised,deblurred] = processData(inputPath,outputPath,noiseMode
 %
 %  OUTPUT:
 %
-%      'noisy' : noisy data read from inputPath (M x N double array)
+%      'noisy' : noisy data read from inputPath (M x N x F double array)
 %
-%   'denoised' : denoised data (M x N double array)
+%   'denoised' : denoised data (M x N x F double array)
 %
 %  'deblurred' : deblurred data (if deblurring is executed, otherwise empty) (M x N double array)
 %
