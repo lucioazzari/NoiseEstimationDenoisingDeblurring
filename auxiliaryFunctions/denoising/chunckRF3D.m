@@ -55,10 +55,13 @@ if all(size(data(:,:,1)) > 512)
         eH = coo(2,2);
         
         D_chunck = chuncks{indChunk};
+
+        alpha = 0.5;
+        W = max(eps('single'),getChunkWeights(D_chunck,alpha));
         
-        D(sV:eV,sH:eH,:) = D(sV:eV,sH:eH,:) + D_chunck;
+        D(sV:eV,sH:eH,:) = D(sV:eV,sH:eH,:) + D_chunck.*W;
         
-        weights(sV:eV,sH:eH,:) = weights(sV:eV,sH:eH,:) + 1;
+        weights(sV:eV,sH:eH,:) = weights(sV:eV,sH:eH,:) + W;
     end
     
     D = D./weights;
