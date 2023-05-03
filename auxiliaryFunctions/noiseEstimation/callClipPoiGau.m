@@ -1,8 +1,11 @@
-function [p] = callClipPoiGau(z)
+function [p] = callClipPoiGau(z,disable_clipping,sign_ind_noise_model)
 
 %% ALGORITHM MAIN PARAMETERS
 %                                %  the standard-deviation function has the form \sigma=(a*y^polyorder+b*y^(polyorder-1)+c*y^(polyorder-2)+...).^(variance_power/2), where y is the unclipped noise-free signal.
 polyorder=1;                     %  order of the polynomial model to be estimated [default 1, i.e. affine/linear]  Note: a large order results in overfitting and difficult and slow convergence of the ML optimization.
+if exist('sign_ind_noise_model','var')
+    polyorder=0;
+end
 variance_power=1;                %  power of the variance [default 1, i.e. affine/linear variance]
 %                                %   The usual Poissonian-Gaussian model has the form \sigma=sqrt(a*y+b), which follows from setting polyorder=1 and variance_power=1.
 
@@ -22,6 +25,10 @@ auto_lambda=1;                   %  include the mixture parameter lambda in the 
 
 clipping_below=1;   %  on/off   [keep off for pure-poissonian (no gaussian terms) noise, since there are no negative errors]
 clipping_above=1;   %  on/off
+if exist('disable_clipping','var')
+    clipping_below=0;
+    clipping_above=0;
+end
 
 prior_density=1; %(SET BELOW)  %  type of prior density to use for ML    (0)
 
